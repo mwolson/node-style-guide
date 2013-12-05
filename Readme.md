@@ -349,7 +349,7 @@ var apple = {
   stem: 2
 };
 
-if (_.has(apple, 'core)) {
+if (_.has(apple, 'core')) {
   console.log('apple has a core');
 }
 ```
