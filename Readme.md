@@ -26,37 +26,6 @@ Just like you brush your teeth after every meal, you clean up any trailing
 whitespace in your JS files before committing. Otherwise the rotten smell of
 careless neglect will eventually drive away contributors and/or co-workers.
 
-## No excessive object indentation or non-symmetric braces/brackets
-
-Don't propagate bad practices from some members of the Perl community.  If you find yourself more than 6 columns from
-your previous line, rethink your actions and prepare for rewrite.
-
-*Right:*
-
-```js
-var collection = {
-  foo: ['bar', 'baz']
-};
-var arr = [
-  'long-element-needing-indentation',
-  'longer-element-needing-indentation'
-];
-```
-
-*Wrong:*
-
-```js
-var collection = {
-                    foo: ['bar',
-                          'baz'
-                         ]
-                 }
-                 ;
-var arr = ['long-element-needing-indentation',
-           'longer-element-needing-indentation'
-        ];
-```
-
 ## Use Semicolons
 
 According to [scientific research][hnsemicolons], the usage of semicolons is
@@ -327,6 +296,37 @@ var a = [
 var b = {"good": 'code'
         , is generally: 'pretty'
         };
+```
+
+## Use symmetric braces/brackets
+
+Don't propagate bad practices from some members of the Perl community.  If you find yourself more than 6 columns from
+your previous line, rethink your actions and prepare for rewrite.
+
+*Right:*
+
+```js
+var collection = {
+  foo: ['bar', 'baz']
+};
+var arr = [
+  'long-element-needing-indentation',
+  'longer-element-needing-indentation'
+];
+```
+
+*Wrong:*
+
+```js
+var collection = {
+                    foo: ['bar',
+                          'baz'
+                         ]
+                 }
+                 ;
+var arr = ['long-element-needing-indentation',
+           'longer-element-needing-indentation'
+        ];
 ```
 
 ## Don't use the === operator unless you mean it
