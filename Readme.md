@@ -31,6 +31,18 @@ careless neglect will eventually drive away contributors and/or co-workers.
 Don't propagate bad practices from some members of the Perl community.  If you find yourself more than 6 columns from
 your previous line, rethink your actions and prepare for rewrite.
 
+*Right:*
+
+```js
+var collection = {
+  foo: ['bar', 'baz']
+};
+var arr = [
+  'long-element-needing-indentation',
+  'longer-element-needing-indentation'
+];
+```
+
 *Wrong:*
 
 ```js
@@ -43,18 +55,6 @@ var collection = {
 var arr = ['long-element-needing-indentation',
            'longer-element-needing-indentation'
         ];
-```
-
-*Right:*
-
-```js
-var collection = {
-  foo: ['bar', 'baz']
-};
-var arr = [
-  'long-element-needing-indentation',
-  'longer-element-needing-indentation'
-];
 ```
 
 ## Use Semicolons
