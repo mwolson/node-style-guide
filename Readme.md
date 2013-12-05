@@ -11,6 +11,10 @@ according to your preferences.
 
 ![Creative Commons License](http://i.creativecommons.org/l/by-sa/3.0/88x31.png)
 
+[Original repo](https://github.com/felixge/node-style-guide)
+
+This has been modified for use by LN eCommerce teams.
+
 ## 2 Spaces for indention
 
 Use 2 spaces for indenting your code and swear an oath to never mix tabs and
@@ -22,6 +26,37 @@ Just like you brush your teeth after every meal, you clean up any trailing
 whitespace in your JS files before committing. Otherwise the rotten smell of
 careless neglect will eventually drive away contributors and/or co-workers.
 
+## No excessive object indentation or non-symmetric braces/brackets
+
+Don't propagate bad practices from some members of the Perl community.  If you find yourself more than 6 columns from
+your previous line, rethink your actions and prepare for rewrite.
+
+*Wrong:*
+
+```js
+var collection = {
+                    foo: ['bar',
+                          'baz'
+                         ]
+                 }
+                 ;
+var arr = ['long-element-needing-indentation',
+           'longer-element-needing-indentation'
+        ];
+```
+
+*Right:*
+
+```js
+var collection = {
+  foo: ['bar', 'baz']
+};
+var arr = [
+  'long-element-needing-indentation',
+  'longer-element-needing-indentation'
+];
+```
+
 ## Use Semicolons
 
 According to [scientific research][hnsemicolons], the usage of semicolons is
@@ -32,11 +67,16 @@ cheap syntactic pleasures.
 [the opposition]: http://blog.izs.me/post/2353458699/an-open-letter-to-javascript-leaders-regarding
 [hnsemicolons]: http://news.ycombinator.com/item?id=1547647
 
-## 80 characters per line
+## 100 characters per line
 
-Limit your lines to 80 characters. Yes, screens have gotten much bigger over the
-last few years, but your brain has not. Use the additional room for split screen,
-your editor supports that, right?
+Soft-limit your node.js code to 100 characters per line, with a hard limit of 120 characters.  Jade template files may
+be 120 characters per line.
+
+Some may prefer 80-column lines, but with the emergence of wide-screen monitors and disuse of printed page, the effort
+involved to foist that on new hires is not worth it.  In fact, it tends to make code less easy to digest.  So we
+enforce 100-column lines instead for code.
+
+That said, you should make every effort to avoid signficant levels of indentation.
 
 ## Use single quotes
 
@@ -75,7 +115,64 @@ if (true)
 }
 ```
 
-Also, notice the use of whitespace before and after the condition statement.
+Also, notice the use of whitespace before and after the `if` condition.
+
+## if/else statements must have closing brace on same line as else
+
+*Right:*
+
+```js
+if (true) {
+  console.log('winning');
+} else {
+  console.log('bi-winning');
+}
+```
+
+*Wrong:*
+
+```js
+if (true) {
+  console.log('losing');
+}
+else {
+  console.log('bi-losing');
+}
+```
+
+## Use lodash library _.each instead of for statement
+
+It is a standard of ours to use lodash library `_.each` statement instead of writing `for` statements.  `_.each`
+gives you the value of each array element, or the value and key of each object.  It avoids having to use `var` to
+declare loop variables, and syntax warnings about having the same loop variable in two different `for` statements
+within single code block.
+
+Be sure to name your value and key (if applicable) parameters meaningfully (don't use names like 'key' and 'value').
+
+`for` statements may be used to iterate through characters in a string or Buffer, if you are writing some low-level
+utility function around parsing that must be fast, but this is discouraged.
+
+*Right:*
+
+```js
+var _ = require('lodash');
+
+var fruits = ['apple', 'banana', 'cranberry'];
+
+_.each(fruits, function(inFruit) {
+  console.log('saw fruit: ' + inFruit);
+});
+```
+
+*Wrong:*
+
+```js
+var fruits = ['apple', 'banana', 'cranberry'];
+
+for (var i = 0; i < fruits.length; i++) {
+  console.log('saw fruit: ' + fruits[i]);
+}
+```
 
 ## Declare one variable per var statement
 
@@ -111,6 +208,12 @@ while (items.length) {
 ```
 
 [crockfordconvention]: http://javascript.crockford.com/code.html
+
+## Declare one variable per var statement
+
+It may be a convention in some third-party code to use a single 'var' statement at top of file to house the 'require'
+statements, but we would like to move away from that practice since it causes headaches when trying to read diff
+output.
 
 ## Use lowerCamelCase for variables, properties and function names
 
@@ -148,19 +251,39 @@ function bank_Account() {
 }
 ```
 
-## Use UPPERCASE for Constants
+## Use UpperCamelCase for Constants
 
 Constants should be declared as regular variables or static class properties,
-using all uppercase letters.
+using `UpperCamelCase` letters.
 
 Node.js / V8 actually supports mozilla's [const][const] extension, but
 unfortunately that cannot be applied to class members, nor is it part of any
 ECMA standard.
 
+Constants should be used sparingly, and should almost never be singleton values.  It's nearly always clearer to use a
+literal value than to define a constant for it, unless you are doing significant computational work.  Maps or
+collections involving Arrays and Objects are fine, when the situation calls for it.
+
+Don't export constants in modules or expose them in classes; that generally leads to bad API design.
+
 *Right:*
 
 ```js
-var SECOND = 1 * 1000;
+var MopToIcon = {
+  '1000': 'visa.png',
+  '1001': 'discover.png'
+};
+
+function File() {
+  this.modMs = this.modTime * 1000;
+  this.effectivePerms = 0777 & this.perms;
+}
+```
+
+*Wrong:*
+
+```js
+var Second = 1 * 1000;
 
 function File() {
 }
@@ -181,7 +304,7 @@ File.fullPermissions = 0777;
 
 ## Object / Array creation
 
-Use trailing commas and put *short* declarations on a single line. Only quote
+Do not use trailing commas. Do put *short* declarations on a single line. Only quote
 keys when your interpreter complains:
 
 *Right:*
@@ -191,6 +314,7 @@ var a = ['hello', 'world'];
 var b = {
   good: 'code',
   'is generally': 'pretty',
+  'static': 'is a reserved keyword by ECMA'
 };
 ```
 
@@ -205,27 +329,83 @@ var b = {"good": 'code'
         };
 ```
 
-## Use the === operator
+## Don't use the === operator unless you mean it
 
-Programming is not about remembering [stupid rules][comparisonoperators]. Use
-the triple equality operator as it will work just as expected.
+The triple equality operator is almost never what you actually mean when writing real programs.
+
+If you want to check whether a field is truthy, omit the operator entirely, like this:
+
+```js
+if (apple) {
+  console.log('apple is truthy');
+}
+```
+
+If you want to check whether an Object field exists, use lodash library `_.has` function:
+
+```js
+var apple = {
+  core: 1,
+  stem: 2
+};
+
+if (_.has(apple, 'core)) {
+  console.log('apple has a core');
+}
+```
+
+If you want to check whether two variables point to the same Object, use `==`:
+
+```js
+var apple1 = {
+  core: 1,
+  stem: 2
+};
+var apple2 = {
+  core: 1,
+  stem: 2
+};
+
+if (apple1 == apple2) {
+  console.log('apple1 is the same object as apple2');
+}
+```
+
+You should generally avoid checking deep equality on two objects except in test cases.  For those, use a function
+provided by the test suite:
+
+```js
+expect({ foo: 'bar' }).to.deep.equal({ foo: 'bar' });
+```
+
+When you must distinguish between several different falsy values, only then should you use the `===` operator.  Never
+use `typeof` for this purpose.
 
 *Right:*
 
 ```js
 var a = 0;
-if (a === '') {
+if (a === 0) {
   console.log('winning');
 }
 
+var b;
+if (b === undefined) {
+  console.log('bi-winning');
+}
 ```
 
 *Wrong:*
 
 ```js
 var a = 0;
-if (a == '') {
+if (a == 0) {
   console.log('losing');
+}
+
+var b;
+if (typeof b === 'undefined') {
+  console.log('bi-losing');
 }
 ```
 
@@ -233,9 +413,25 @@ if (a == '') {
 
 ## Use multi-line ternary operator
 
-The ternary operator should not be used on a single line. Split it up into multiple lines instead.
+The ternary operator should be split up into multiple lines when any of the terms is complex.  If you do this as part
+of an assignment, line up the '=', '?' and ':' characters.
+
+But it should be kept to a single line when all of the terms are simple.
+
+Parens should not be used around the condition part of the operation (the `a == b` part below), unless the condition is
+complex.
+
+If the ternary operation is part of a string concatenation or array, parens should be placed around the entire constuct.
+
+Simple case:
 
 *Right:*
+
+```js
+var foo = a === b ? 1 : 2;
+```
+
+*Wrong:*
 
 ```js
 var foo = (a === b)
@@ -243,10 +439,24 @@ var foo = (a === b)
   : 2;
 ```
 
+Complex case:
+
+*Right:*
+
+```js
+var foo = apple.length === banana.length * 2
+        ? apple.slice(banana, 2, 1)
+        : banana.slice(apple, 2, 1);
+var pear = { verb: 'crunchy' };
+var bar = (pear === undefined ? 'i have no' : 'i have a ' + pear.verb) + ' pear';
+```
+
 *Wrong:*
 
 ```js
-var foo = (a === b) ? 1 : 2;
+var foo = (apple.length === banana.length * 2) ? apple.slice(banana, 2, 1) : banana.slice(apple, 2, 1);
+var pear = { verb: 'crunchy' };
+var bar = ((pear === undefined) ? 'i have no' : ('i have a ' + pear.verb)) + ' pear';
 ```
 
 ## Do not extend built-in prototypes
@@ -297,56 +507,91 @@ if (user.isAdmin() || user.isModerator()) {
 }
 ```
 
-## Write small functions
+## Write small functions when possible
 
 Keep your functions short. A good function fits on a slide that the people in
 the last row of a big room can comfortably read. So don't count on them having
 perfect vision and limit yourself to ~15 lines of code per function.
 
-## Return early from functions
+If you are doing operations requiring control flow, however, it is preferable to have a large outer function that
+contains state and small inner functions which manipulate that state when callbacks finish.  Be sure to name these
+functions.
 
-To avoid deep nesting of if-statements, always return a functions value as early
-as possible.
+## When callbacks are used in if statements, do not return early
+
+While deep nesting of if-statements should be avoided, avoid `return` statements when possible, as overusing them can
+mask problems.
+
+It's easier to reason about callback behavior and catch control flow problems when you use `if/else` in preference to
+`if/return`.  Due to node.js being so callback-focused, this means you should almost never use `return`.
+
+For complex computational work that does not involve callbacks, `return` statements are preferable to deeply-nested
+`if` statements.
 
 *Right:*
 
 ```js
-function isPercentage(val) {
-  if (val < 0) {
-    return false;
-  }
-
-  if (val > 100) {
-    return false;
-  }
-
-  return true;
+if (errorHappened) {
+  callback(new Error('error happened'));
+} else {
+  callback(null, 'winning');
 }
 ```
 
 *Wrong:*
 
 ```js
-function isPercentage(val) {
+if (errorHappened) {
+  callback(new Error('error happened'));
+  return;
+}
+
+console.log('losing');
+```
+
+*Right:*
+
+```js
+function isPercentage(val, callback) {
   if (val >= 0) {
     if (val < 100) {
-      return true;
+      callback(true);
     } else {
-      return false;
+      callback(false);
     }
   } else {
-    return false;
+    callback(false);
   }
 }
 ```
 
-Or for this particular example it may also be fine to shorten things even
-further:
+*Wrong:*
+
+```js
+function isPercentage(val, callback) {
+  if (val < 0) {
+    callback(false);
+    return;
+  }
+
+  if (val > 100) {
+    callback(false);
+    return;
+  }
+
+  callback(true);
+}
+```
+
+For this particular example it is preferable to shorten things even further, and minimize the number of code paths
+which can execute callbacks:
+
+*Even better:*
 
 ```js
 function isPercentage(val) {
   var isInRange = (val >= 0 && val <= 100);
-  return isInRange;
+  callback(isInRange);
 }
 ```
 
@@ -439,6 +684,36 @@ var isSessionValid = (session.expires < Date.now());
 if (isSessionValid) {
   // ...
 }
+```
+
+## Do not mix code and documentation
+
+If you have a requirement to write documentation, then use a README.md file or internal site.  If your intended
+audience is internal-only, you should prefer to write documentation hosted on an internal site, and you should not use
+README.md files.
+
+Your co-workers don't care about running "make docs", and care even less to read your entire source tree to understand
+how to start your service.
+
+*Wrong:*
+
+```js
+/**
+NAME
+
+Web application for the Front End SOA
+
+SYNOPSIS
+
+From the command-line
+
+_(Only file-based configuration is considered.)_
+
+    $ node myservice
+    Myservice is listening on port 8080 ...
+**/
+
+exports.init = init;
 ```
 
 ## Object.freeze, Object.preventExtensions, Object.seal, with, eval
