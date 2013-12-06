@@ -488,13 +488,13 @@ if (a.empty()) {
 
 ## Use descriptive conditions
 
-Any non-trivial conditions should be assigned to a descriptive variable:
+Any non-trivial conditions should be assigned to a descriptive variable.  But don't take this too far; something with
+only two simple inner conditions might not deserve its own variable, unless you are doing this multiple times.
 
 *Right:*
 
 ```js
-var isAuthorized = (user.isAdmin() || user.isModerator());
-if (isAuthorized) {
+if (user.isAdmin() || user.isModerator()) {
   console.log('winning');
 }
 ```
@@ -502,7 +502,27 @@ if (isAuthorized) {
 *Wrong:*
 
 ```js
-if (user.isAdmin() || user.isModerator()) {
+var isAuthorized = (user.isAdmin() || user.isModerator());
+if (isAuthorized) {
+  console.log('losing');
+}
+```
+
+*Right:*
+
+```js
+var isAuthorized = (user.isAdmin() || user.isModerator());
+var isStaff = (user.isProfessor() || user.isJanitor());
+
+if (isAuthorized && isStaff) {
+  console.log('winning');
+}
+```
+
+*Wrong:*
+
+```js
+if ((user.isAdmin() || user.isModerator()) && (user.isProfessor() || user.isJanitor())) {
   console.log('losing');
 }
 ```
