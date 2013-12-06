@@ -683,10 +683,12 @@ req.on('end', function() {
 
 Use closures, but don't nest them overly. Otherwise your code will become a mess.
 
+If you have multiple asynchronous code blocks, use async.series() and safe-callback to split the code into tasks.
+
 *Right:*
 
 ```js
-setTimeout(function() {
+setTimeout(function later() {
   client.connect(afterConnect);
 }, 1000);
 
@@ -698,7 +700,7 @@ function afterConnect() {
 *Also Right:*
 
 ```js
-setTimeout(function() {
+setTimeout(function later() {
   client.connect(function() {
     console.log('still winning');
   });
@@ -810,7 +812,7 @@ docs; usage of any POD constructs in documentation is a failure.
 
 If the documentation approaches 75% of the length of the code, or the code is too complex to explain succinctly, then
 you should probably move the code into its own node.js module with separate code repo, and move the documentation into
-interal website or README.md file for that module.
+internal website or README.md file for that module.
 
 ## Be careful about links to internal sites within code
 
