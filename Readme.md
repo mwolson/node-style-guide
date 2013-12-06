@@ -42,8 +42,8 @@ Soft-limit your node.js code to 100 characters per line, with a hard limit of 12
 be 120 characters per line.
 
 Some may prefer 80-column lines, but with the emergence of wide-screen monitors and disuse of printed page, the effort
-involved to foist that on new hires is not worth it.  In fact, it tends to make code less easy to digest.  So we
-enforce 100-column lines instead for code.
+involved to foist that on new hires is not worth it.  In fact, it tends to make code less easy to digest, because it
+makes the code take up more lines and vertical space.  So we enforce 100-column lines instead for code.
 
 That said, you should make every effort to avoid signficant levels of indentation.
 
