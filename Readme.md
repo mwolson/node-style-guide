@@ -566,7 +566,11 @@ if (errorHappened) {
   return;
 }
 
+// oops, forgot my callback
 console.log('losing');
+
+// add it back after my service crashes
+callback(null, 'still losing');
 ```
 
 *Right:*
