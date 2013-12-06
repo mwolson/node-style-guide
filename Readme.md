@@ -642,7 +642,7 @@ req.on('end', function() {
 
 ## No nested closures
 
-Use closures, but don't nest them. Otherwise your code will become a mess.
+Use closures, but don't nest them overly. Otherwise your code will become a mess.
 
 *Right:*
 
@@ -656,13 +656,27 @@ function afterConnect() {
 }
 ```
 
-*Wrong:*
+*Also Right:*
 
 ```js
 setTimeout(function() {
   client.connect(function() {
     console.log('losing');
   });
+}, 1000);
+```
+
+*Wrong:*
+
+```js
+setTimeout(function() {
+  request('url',
+          function() {
+            client.connect(function() {
+              console.log('losing');
+            })
+          })
+  );
 }, 1000);
 ```
 
