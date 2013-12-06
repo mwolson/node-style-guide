@@ -624,11 +624,22 @@ function isPercentage(val) {
 Feel free to give your closures a name. It shows that you care about them, and
 will produce better stack traces, heap and cpu profiles.
 
+However, if the closure is only one line, it does not require a name.
+
 *Right:*
 
 ```js
 req.on('end', function onEnd() {
+  doSomething();
   console.log('winning');
+});
+```
+
+*Acceptable:*
+
+```js
+req.on('end', function() {
+  console.log('still winning');
 });
 ```
 
@@ -636,6 +647,7 @@ req.on('end', function onEnd() {
 
 ```js
 req.on('end', function() {
+  doSomething();
   console.log('losing');
 });
 ```
