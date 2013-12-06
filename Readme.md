@@ -661,7 +661,7 @@ function afterConnect() {
 ```js
 setTimeout(function() {
   client.connect(function() {
-    console.log('losing');
+    console.log('still winning');
   });
 }, 1000);
 ```
