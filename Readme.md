@@ -167,6 +167,31 @@ for (var veggie in veggies) {
 }
 ```
 
+## Use lodash library _.contains to check inclusion of element in an Array
+
+The lodash library `_.contains` function must be used if you want to check that an element is present in an Array.  You
+must not use `Array.indexOf()`, since it is easy to mistake the meaning and invert the logic.
+
+*Right:*
+
+```js
+var fruits = ['apple', 'banana', 'cranberry'];
+
+if (_.contains(fruits, 'banana')) {
+  console.log('winning');
+}
+```
+
+*Wrong:*
+
+```js
+var fruits = ['apple', 'banana', 'cranberry'];
+
+if (fruits.indexOf('banana') !== -1) {
+  console.log('losing');
+}
+```
+
 ## Declare one variable per var statement
 
 Declare one variable per var statement, it makes it easier to re-order the
@@ -435,7 +460,7 @@ if (typeof b === 'undefined') {
 
 [comparisonoperators]: https://developer.mozilla.org/en/JavaScript/Reference/Operators/Comparison_Operators
 
-## Use multi-line ternary operator
+## Usage of ternary operator
 
 The ternary operator should be split up into multiple lines when any of the terms is complex.  If you do this as part
 of an assignment, line up the '=', '?' and ':' characters.
@@ -447,7 +472,7 @@ complex.
 
 If the ternary operation is part of a string concatenation or array, parens should be placed around the entire constuct.
 
-Simple case:
+### Simple case
 
 *Right:*
 
@@ -463,7 +488,7 @@ var foo = (a === b)
   : 2;
 ```
 
-Complex case:
+### Complex case
 
 *Right:*
 
@@ -492,7 +517,7 @@ be forever grateful.
 
 ```js
 var a = [];
-if (!a.length) {
+if (_.isEmpty(a)) {
   console.log('winning');
 }
 ```
@@ -506,6 +531,34 @@ Array.prototype.empty = function() {
 
 var a = [];
 if (a.empty()) {
+  console.log('losing');
+}
+```
+
+## Use of ! in condiitons
+
+Use a single space between `!` and the condition.
+
+*Right:*
+
+```js
+var arr = [1];
+if (! _.isEmpty(a)) {
+  console.log('winning');
+}
+if (! (_.contains(arr, 2) || _.contains(arr, 3))) {
+  console.log('winning');
+}
+```
+
+*Wrong:*
+
+```js
+var arr = [1];
+if (!_.isEmpty(a)) {
+  console.log('losing');
+}
+if (!(_.contains(arr, 2) || _.contains(arr, 3))) {
   console.log('losing');
 }
 ```
