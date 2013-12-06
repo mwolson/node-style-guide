@@ -816,6 +816,8 @@ interal website or README.md file for that module.
 
 Linking to internal sites (like Jira) in comments about code changes can be OK, but only if the change is non-obvious
 product logic.  Such links must be accompanied with a brief, clear, 1-2 line description of the product requirement.
+Avoid having too many of them in the same part of the codebase; prefer to replace old ones if requirements have
+changed.
 
 ## Object.freeze, Object.preventExtensions, Object.seal, with, eval
 
