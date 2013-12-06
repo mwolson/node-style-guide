@@ -116,6 +116,11 @@ gives you the value of each array element, or the value and key of each object. 
 declare loop variables, and syntax warnings about having the same loop variable in two different `for` statements
 within single code block.
 
+This also provides protection from the unexpected side effects of [hoisting](hoisting), which effects both `if` and
+`for` statements.
+
+[hoisting]: http://www.adequatelygood.com/JavaScript-Scoping-and-Hoisting.html
+
 Be sure to name your value and key (if applicable) parameters meaningfully (don't use names like 'key' and 'value').
 
 `for` statements may be used to iterate through characters in a string or Buffer, if you are writing some low-level
@@ -131,6 +136,15 @@ var fruits = ['apple', 'banana', 'cranberry'];
 _.each(fruits, function(inFruit) {
   console.log('saw fruit: ' + inFruit);
 });
+
+var veggies = {
+  'bell pepper': 'green',
+  onion: 'yellow'
+};
+
+_.each(veggies, function(color, veggie) {
+  console.log('saw veggie: ' + veggie + ' with color: ' + color);
+});
 ```
 
 *Wrong:*
@@ -140,6 +154,16 @@ var fruits = ['apple', 'banana', 'cranberry'];
 
 for (var i = 0; i < fruits.length; i++) {
   console.log('saw fruit: ' + fruits[i]);
+}
+
+var veggies = {
+  'bell pepper': 'green',
+  onion: 'yellow'
+};
+
+for (var veggie in veggies) {
+  var color = veggies[veggie];
+  console.log('saw veggie: ' + veggie + ' with color: ' + color);
 }
 ```
 
@@ -488,8 +512,11 @@ if (a.empty()) {
 
 ## Use descriptive conditions
 
-Any non-trivial conditions should be assigned to a descriptive variable.  But don't take this too far; something with
-only two simple inner conditions might not deserve its own variable, unless you are doing this multiple times.
+Any non-trivial conditions should be assigned to a descriptive variable.  We define non-trivial to mean: a condition
+composed of two or less operations.
+
+Exception: If a trivial condition would be used more than once in the same function, or you have multiple similar of
+them in the same function, then it should be treated as non-trivial and have its own descriptive variable.
 
 *Right:*
 
@@ -736,14 +763,17 @@ if (isSessionValid) {
 }
 ```
 
-## Do not mix code and documentation
+## Do not write commented documentation for general program usage
 
-If you have a requirement to write documentation, then use a README.md file or internal site.  If your intended
-audience is internal-only, you should prefer to write documentation hosted on an internal site, and you should not use
-README.md files.
+If you have a requirement to write documentation on usage of an entire codebase, then use a README.md file or internal
+site.  If your intended audience is internal-only, you should prefer to write documentation hosted on an internal site,
+and you should not use README.md files.
 
 Your co-workers don't care about running "make docs", and care even less to read your entire source tree to understand
 how to start your service.
+
+If your code is for a standalone script, it may make sense to support the `--usage` parameter, in which case
+documentation should be code, not comments.
 
 *Wrong:*
 
@@ -765,6 +795,27 @@ _(Only file-based configuration is considered.)_
 
 exports.init = init;
 ```
+
+## Do write in-code documentation on classes and utility functions that are nonobvious
+
+If the purpose of a function or class is clear from name or code, then documentation may omitted.
+
+For nonobvious functions: documentation should only cover immediate use of functions.  For classes: it may have a brief
+overview of all functions which are properties of the class, as a means of describing how the class is meant to be
+used.
+
+For both: It should not be overly verbose. It should come just before the definition of the function or class. It
+should not be at the beginning or end of the file.  It should never have placeholder garbage like "SYNOPSIS" in POD
+docs; usage of any POD constructs in documentation is a failure.
+
+If the documentation approaches 75% of the length of the code, or the code is too complex to explain succinctly, then
+you should probably move the code into its own node.js module with separate code repo, and move the documentation into
+interal website or README.md file for that module.
+
+## Be careful about links to internal sites within code
+
+Linking to internal sites (like Jira) in comments about code changes can be OK, but only if the change is non-obvious
+product logic.  Such links must be accompanied with a brief, clear, 1-2 line description of the product requirement.
 
 ## Object.freeze, Object.preventExtensions, Object.seal, with, eval
 
