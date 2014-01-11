@@ -477,13 +477,13 @@ If the ternary operation is part of a string concatenation or array, parens shou
 *Right:*
 
 ```js
-var foo = a === b ? 1 : 2;
+var foo = a == b ? 1 : 2;
 ```
 
 *Wrong:*
 
 ```js
-var foo = (a === b)
+var foo = (a == b)
   ? 1
   : 2;
 ```
@@ -493,7 +493,7 @@ var foo = (a === b)
 *Right:*
 
 ```js
-var foo = apple.length === banana.length * 2
+var foo = apple.length == banana.length * 2
         ? apple.slice(banana, 2, 1)
         : banana.slice(apple, 2, 1);
 var pear = { verb: 'crunchy' };
@@ -503,7 +503,7 @@ var bar = (pear === undefined ? 'i have no' : 'i have a ' + pear.verb) + ' pear'
 *Wrong:*
 
 ```js
-var foo = (apple.length === banana.length * 2) ? apple.slice(banana, 2, 1) : banana.slice(apple, 2, 1);
+var foo = (apple.length == banana.length * 2) ? apple.slice(banana, 2, 1) : banana.slice(apple, 2, 1);
 var pear = { verb: 'crunchy' };
 var bar = ((pear === undefined) ? 'i have no' : ('i have a ' + pear.verb)) + ' pear';
 ```
