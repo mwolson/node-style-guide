@@ -269,25 +269,26 @@ function bank_Account() {
 }
 ```
 
-## Use UpperCamelCase for Constants
+## Use lowerCamelCase for globals and constants
 
-Constants should be declared as regular variables or static class properties,
-using `UpperCamelCase` letters.
+Constants should be declared as regular variables or static class properties, using `lowerCamelCase` letters.
 
-Node.js / V8 actually supports mozilla's [const][const] extension, but
-unfortunately that cannot be applied to class members, nor is it part of any
-ECMA standard.
+Node.js / V8 actually supports mozilla's [const][const] extension, but unfortunately that cannot be applied to class
+members, nor is it part of any ECMA standard.  It also breaks Sonar, so use `var` instead.
 
 Constants should be used sparingly, and should almost never be singleton values.  It's nearly always clearer to use a
 literal value than to define a constant for it, unless you are doing significant computational work.  Maps or
 collections involving Arrays and Objects are fine, when the situation calls for it.
 
-Don't export constants in modules or expose them in classes; that generally leads to bad API design.
+As a general rule, don't export constants in modules or expose them in classes; that can lead to bad API design.
+
+Exposing module-level globals for reading can sometimes be OK.  For writes it is preferred to export a function called
+`setup(options)` which can modify them in bulk.
 
 *Right:*
 
 ```js
-var MopToIcon = {
+var mopToIcon = {
   '1000': 'visa.png',
   '1001': 'discover.png'
 };
