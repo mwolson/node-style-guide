@@ -321,6 +321,72 @@ File.fullPermissions = 0777;
 
 [const]: https://developer.mozilla.org/en/JavaScript/Reference/Statements/const
 
+## Inheritance done right
+
+Inheritance is tricky, especially when modules are involved, so we'll define the following guidelines.
+
+* Classes are always defined using a named function (see `function Result()` below)
+* That class is always set as a key of `exports`; never overwrite the entire module.exports or exports object with a class
+* Class names and exported classes will be UpperCamelCase, and will have same name
+* Always have `var self = this;` be the first line of every constructor and class method, and never use `this` outside of that one line; this allows us to categorically avoid weird edge cases around use of `this` in function calls
+* Always have a single blank line after the above `var self = this;` statement
+* The defintion of the constructor should never end with a semicolon
+* Use `util.inherits` to do inheritance (see `util.inherits(SuccessResult, Result)` below); do this before the exports line
+* Within the constructor of the child class, always run `ParentClass.super_.apply`, replacing ParentClass appropriately (see `function SuccessResult()` below); unfortunately, the parent class must be explicitly named in this `.apply` statement
+* This `.apply` statement must include `self` and `arguments`; if the arguments to child and parent constructor differ significantly, the design is questionable
+* If taking the constructor takes the recommended `options` argument, take steps to avoid overwriting its members, such as with `lodash` and its `_.extend()` function below.
+
+Here is an example of inheritance done correctly:
+
+```js
+var _ = require('lodash');
+var util = require('util');
+
+function Result(inOptions) {
+  var self = this;
+
+  _.extend(self, {
+    detail: null,
+    message: null,
+    status: null
+  }, inOptions);
+}
+
+exports.Result = Result;
+
+Result.prototype.getDefaultMessage = function getDefaultMessage() {
+  var self = this;
+
+  return 'unknown error: ' + JSON.stringify(_.pick(self, 'detail', 'status', 'message'));
+};
+
+function SuccessResult(inOptions) {
+  var self = this;
+
+  inOptions = _.extend({
+    detail: settings.serviceName + '_common_success',
+    message: 'call successful'
+  }, inOptions);
+
+  // Initialize Result interface
+  SuccessResult.super_.apply(self, arguments);
+
+  self.status = 'success';
+
+  // an object to use when returning early from an async flow
+  self.response = null;
+}
+
+util.inherits(SuccessResult, Result);
+exports.SuccessResult = SuccessResult;
+
+SuccessResult.prototype.getDefaultMessage = function getDefaultMessage() {
+  var self = this;
+
+  return 'unknown success reason: ' + JSON.stringify(_.pick(self, 'detail', 'status', 'message'));
+};
+```
+
 ## Object / Array creation
 
 Do not use trailing commas. Do put *short* declarations on a single line. Only quote
