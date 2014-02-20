@@ -343,6 +343,10 @@ Here is an example of inheritance done correctly:
 var _ = require('lodash');
 var util = require('util');
 
+//
+// Result base class
+//
+
 function Result(inOptions) {
   var self = this;
 
@@ -361,6 +365,10 @@ Result.prototype.getDefaultMessage = function getDefaultMessage() {
   return 'unknown error: ' + JSON.stringify(_.pick(self, 'detail', 'status', 'message'));
 };
 
+//
+// SuccessResult derived class
+//
+
 function SuccessResult(inOptions) {
   var self = this;
 
@@ -369,7 +377,7 @@ function SuccessResult(inOptions) {
     message: 'call successful'
   }, inOptions);
 
-  // Initialize Result interface
+  // Initialize Result superclass
   SuccessResult.super_.call(self, inOptions);
 
   self.status = 'success';
@@ -387,10 +395,14 @@ SuccessResult.prototype.getDefaultMessage = function getDefaultMessage() {
   return 'unknown success reason: ' + JSON.stringify(_.pick(self, 'detail', 'status', 'message'));
 };
 
+//
+// AmbivalentResult derived class
+//
+
 function AmbivalentResult(inOptions, existingErr) {
   var self = this;
 
-  // Initialize Result interface
+  // Initialize Result superclass
   Result.super_.apply(self, arguments);
 }
 
