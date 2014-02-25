@@ -332,7 +332,7 @@ Inheritance is tricky, especially when modules are involved, so we'll define the
 * Always have a single blank line after the above `var self = this;` statement
 * The defintion of the constructor should never end with a semicolon
 * Use `util.inherits` to do inheritance (see `util.inherits(SuccessResult, Result)` below); do this before the exports line
-* Within the constructor of the child class, always run `ParentClass.super_.call`, replacing ParentClass appropriately (see `function SuccessResult()` below); unfortunately, the parent class must be explicitly named in this `.call` statement
+* Within the constructor of the child class, always run `ChildClass.super_.call`, replacing ChildClass appropriately (see `function SuccessResult()` below); unfortunately, the child class must be explicitly named in this `.call` statement
 * This `.call` statement must include `self` as first argument and any remaining functions; if the arguments to child and parent constructor differ significantly, the design is questionable
 * An acceptable alternative to `.call` is to use `.apply(self, arguments)`; this should be done if the arguments do not need to be changed before calling parent; note that we mean the literal automatic Javascript variable named `arguments` (see `function AmbivalentResult()` below for an example)
 * If taking the constructor takes the recommended `options` argument, take steps to avoid overwriting its members, such as with `lodash` and its `_.extend()` function below.
@@ -403,7 +403,7 @@ function AmbivalentResult(inOptions, existingErr) {
   var self = this;
 
   // Initialize Result superclass
-  Result.super_.apply(self, arguments);
+  AmbivalentResult.super_.apply(self, arguments);
 }
 
 util.inherits(AmbivalentResult, Result);
