@@ -276,6 +276,8 @@ when an exception occurs.
 
 Named functions are also more performant than anonymous functions that are not named.
 
+When naming functions, strive for a balance of being both succinct and descriptive.
+
 (While writing tests, it is okay for functions to not be named (ie. `it('should do ...', function() { ...`).  Mocha makes heavy use of anonymous functions
 as callbacks, and those functions are just a means to an end for writing tests.)
 
@@ -294,6 +296,15 @@ var jadeFiles = _.filter(filenames, function(filename) {
   return _s.strRightBack(filename, '.') === 'jade';
 });
 ```
+
+*Also Wrong:*
+
+```js
+var jadeFiles = _.filter(filenames, function filterJadeFilesByExtension(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
+});
+```
+
 ## Use lowerCamelCase for globals and constants
 
 Constants should be declared as regular variables or static class properties, using `lowerCamelCase` letters.
