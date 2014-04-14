@@ -269,6 +269,37 @@ function bank_Account() {
 }
 ```
 
+## Function naming
+
+Functions should _always_ be named.  This is for clarity in both the code itself and in stacktraces
+when an exception occurs.
+
+Named functions are also more performant than anonymous functions that are not named.
+
+(While writing tests, it is okay for functions to not be named (ie. `it('should do ...', function() { ...`).  Mocha makes heavy use of anonymous functions
+as callbacks, and those functions are just a means to an end for writing tests.)
+
+*Right:*
+
+```js
+var jadeFiles = _.filter(
+  filenames,
+  function jadeOnly(filename) {
+    return _s.strRightBack(filename, '.') === 'jade';
+  }
+);
+```
+
+*Wrong:*
+
+```js
+var jadeFiles = _.filter(
+  filenames,
+  function(filename) {
+    return _s.strRightBack(filename, '.') === 'jade';
+  }
+);
+```
 ## Use lowerCamelCase for globals and constants
 
 Constants should be declared as regular variables or static class properties, using `lowerCamelCase` letters.
