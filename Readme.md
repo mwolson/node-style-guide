@@ -788,43 +788,46 @@ function isPercentage(val) {
   callback(isInRange);
 }
 ```
+## Function naming
 
-## Name your closures
+Functions should _always_ be named.  This is for clarity in both the code itself and in stacktraces
+when an exception occurs.  It also results in better heap and CPU profiles, which is crucial for tracking
+own problems.  Named functions are also more performant than anonymous functions that are not named.
 
-Feel free to give your closures a name. It shows that you care about them, and
-will produce better stack traces, heap and cpu profiles.
+When naming functions, strive for a balance of being both succinct and descriptive.
 
-However, if the closure is only one line, it does not require a name.
+(While writing tests, it is okay for functions to not be named (ie. `it('should do ...', function() { ...`).  Mocha
+makes heavy use of anonymous functions as callbacks, and those functions are just a means to an end for writing tests.)
+Extremely trivial one-line functions can also sometimes go without names.
 
 *Right:*
 
 ```js
-req.on('end', function onEnd() {
-  doSomething();
-  console.log('winning');
-});
-```
-
-*Acceptable:*
-
-```js
-req.on('end', function() {
-  console.log('still winning');
+var jadeFiles = _.filter(filenames, function jadeOnly(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
 });
 ```
 
 *Wrong:*
 
 ```js
-req.on('end', function() {
-  doSomething();
-  console.log('losing');
+var jadeFiles = _.filter(filenames, function(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
 });
 ```
 
-## No nested closures
+*Also Wrong:*
 
-Use closures, but don't nest them overly. Otherwise your code will become a mess.
+```js
+var jadeFiles = _.filter(filenames, function filterJadeFilesByExtension(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
+});
+```
+
+## No nested functions
+
+Use function closures, but don't nest them overly. Otherwise your code will become a mess.  Nested functions also
+perform badly, so try to keep functions defined at the top level (or within a class prototype) when reasonable.
 
 If you have multiple asynchronous code blocks, use async.series() and safe-callback to split the code into tasks.
 
@@ -866,9 +869,9 @@ setTimeout(function() {
 
 ## Use slashes for comments
 
-Use slashes for both single line and multi line comments. Try to write
-comments that explain higher level mechanisms or clarify difficult
-segments of your code. Don't use comments to restate trivial things.
+Use slashes for both single line and multi line comments. Try to write comments that explain higher level mechanisms or
+clarify difficult segments of your code. Don't use comments to restate trivial things.  Comments must have a single
+space between the slash and text.
 
 *Right:*
 
@@ -906,6 +909,13 @@ var isSessionValid = (session.expires < Date.now());
 if (isSessionValid) {
   // ...
 }
+```
+
+*Also Wrong:*
+
+```js
+//Execute a regex
+var matches = item.match(/ID_([^\n]+)=([^\n]+)/));
 ```
 
 ## Do not write commented documentation for general program usage
