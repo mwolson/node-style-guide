@@ -282,23 +282,17 @@ as callbacks, and those functions are just a means to an end for writing tests.)
 *Right:*
 
 ```js
-var jadeFiles = _.filter(
-  filenames,
-  function jadeOnly(filename) {
-    return _s.strRightBack(filename, '.') === 'jade';
-  }
-);
+var jadeFiles = _.filter(filenames, function jadeOnly(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
+});
 ```
 
 *Wrong:*
 
 ```js
-var jadeFiles = _.filter(
-  filenames,
-  function(filename) {
-    return _s.strRightBack(filename, '.') === 'jade';
-  }
-);
+var jadeFiles = _.filter(filenames, function(filename) {
+  return _s.strRightBack(filename, '.') === 'jade';
+});
 ```
 ## Use lowerCamelCase for globals and constants
 
